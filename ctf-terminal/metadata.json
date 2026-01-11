@@ -1,0 +1,81 @@
+{
+  "lab_id": "ctf-terminal-guided-path-hijacking",
+  "name": "PATH Hijacking Challenge",
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "intermediate",
+  "category": "privilege_escalation",
+  "estimated_duration": "30-45min",
+  "story": "You are a pentester for TechCorp. An internal server runs a backup script as root via cron. Your mission: exploit a PATH misconfiguration to read the root flag.",
+  "objectives": "Capture the flag located at /root/flag.txt by exploiting PATH hijacking. After exploitation, the flag will be readable via /opt/output/flag.txt.",
+  "template_path": "altair/lab-path-hijacking-guided:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Identify the vulnerability",
+      "description": "Inspect active cron jobs and identify the script executed by root.",
+      "question": "What is the full path of the backup script executed by root?",
+      "expected_answer": "/opt/backup.sh",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 3,
+          "text": "System cron jobs are often defined in /etc/crontab"
+        },
+        {
+          "hint_number": 2,
+          "cost": 5,
+          "text": "Try: cat /etc/crontab | grep root"
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Find the weakness",
+      "description": "Analyze the script at /opt/backup.sh. Which command is executed without an absolute path?",
+      "question": "Which command is vulnerable to PATH hijacking?",
+      "expected_answer": "tar",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 5,
+          "text": "Review every line of /opt/backup.sh"
+        },
+        {
+          "hint_number": 2,
+          "cost": 8,
+          "text": "Look for a command that does not start with '/'"
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Hijack the PATH",
+      "description": "Create a fake 'tar' binary in /tmp. The root cron job uses a misconfigured PATH that starts with /tmp, so your binary will be executed. Your payload must drop the flag into a file readable by student.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{path_hijacking_pwned_2026}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "Create an executable file at /tmp/tar"
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "Your payload can do: cat /root/flag.txt > /opt/output/flag.txt"
+        },
+        {
+          "hint_number": 3,
+          "cost": 15,
+          "text": "You can read the result with: cat /opt/output/flag.txt"
+        }
+      ]
+    }
+  ]
+}
