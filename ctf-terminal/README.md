@@ -35,10 +35,6 @@ docker exec -it path-hijack bash -lc 'exec su - student'
 ## Solution
 
 ```
-podman exec -it path-hijack bash
-su - student
-# student:student
-
 cat /etc/crontab | grep root
 cat /opt/backup.sh
 
