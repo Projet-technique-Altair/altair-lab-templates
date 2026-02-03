@@ -2,7 +2,7 @@
   "lab_id": "89a5ac7a-28bd-4bc9-bb63-c5ca8011e0f6",
   "name": "PATH Hijacking Challenge",
   "lab_type": "ctf_terminal_guided",
-  "difficulty": "intermediate",
+  "difficulty": "easy",
   "category": "privilege_escalation",
   "estimated_duration": "30-45min",
   "story": "You are a pentester for TechCorp. An internal server runs a backup script as root via cron. Your mission: exploit a PATH misconfiguration to read the root flag.",
