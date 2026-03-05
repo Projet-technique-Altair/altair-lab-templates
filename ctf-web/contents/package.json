@@ -1,0 +1,12 @@
+{
+  "name": "ctf-web-orbital-station",
+  "version": "1.0.0",
+  "description": "Vulnerable Express CTF: eval-based JS command injection",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

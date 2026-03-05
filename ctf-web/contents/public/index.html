@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altaïr Orbital Station</title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">Altaïr Orbital Station</div>
+        <div class="tag">Telemetry, comms, and diagnostics</div>
+      </header>
+
+      <main>
+        <section class="card">
+          <h1>Visitor Access</h1>
+          <p>
+            Restricted systems are offline after the micrometeor storm. Staff
+            access is gated by a station bootstrap code.
+          </p>
+          <div class="form-row">
+            <input id="accessCode" type="text" placeholder="Bootstrap code" />
+            <button id="unlockBtn">Unlock</button>
+          </div>
+          <p class="hint">
+            Hint: the comms console still echoes the last downlink. Look for a
+            base64 payload in the console scripts.
+          </p>
+          <p id="unlockStatus" class="status"></p>
+        </section>
+
+        <section class="card locked" id="consoleCard">
+          <h2>Diagnostics Console</h2>
+          <p>
+            The navigation team left a quick evaluator for adjusting sensor
+            offsets.
+          </p>
+          <div class="form-row">
+            <input
+              id="expression"
+              type="text"
+              placeholder="Example: 7 * 6"
+            />
+            <button id="runBtn">Run</button>
+          </div>
+          <pre id="result" class="result">Awaiting input...</pre>
+        </section>
+
+        <section class="card">
+          <h2>Station Feed</h2>
+          <ul>
+            <li>O2 scrubbers nominal. Backup node stable.</li>
+            <li>Solar arrays aligned to Altaïr, 97% efficiency.</li>
+            <li>Comms uplink in fallback mode. Diagnostics locked.</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <script src="/public/app.js"></script>
+  </body>
+</html>
