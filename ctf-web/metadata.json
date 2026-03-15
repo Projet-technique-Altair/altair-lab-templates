@@ -1,12 +1,20 @@
 {
   "lab_id": "87255f33-a57f-4a4e-bf0c-c4e20cde6bdd",
   "name": "Orbital Console Injection",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
   "lab_type": "ctf_web_guided",
   "difficulty": "medium",
   "category": "web_security",
   "estimated_duration": "30-45min",
   "story": "A damaged orbital station left its diagnostics console online. Your mission is to unlock access and exploit a JavaScript eval flaw to recover the flag.",
   "objectives": "Capture the flag located at /opt/flag/flag.txt by exploiting the eval-based command injection in the diagnostics console.",
+  "prerequisites": null,
   "template_path": "europe-west9-docker.pkg.dev/altair-isen/altair-labs/lab-orbital-console-injection:latest",
   "steps": [
     {

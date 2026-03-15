@@ -1,12 +1,20 @@
 {
   "lab_id": "11111111-2222-3333-4444-555555555555",
   "name": "Nmap Basics - First Recon",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
   "lab_type": "ctf_terminal_guided",
   "difficulty": "easy",
   "category": "network_recon",
   "estimated_duration": "15-25min",
   "story": "You are a junior analyst. Perform a first local reconnaissance and report exposed services running on the sandbox host.",
   "objectives": "Learn core Nmap commands, understand common scan modes, identify open ports on localhost, and recognize exposed services.",
+  "prerequisites": null,
   "template_path": "lab-nmap-basics:v1",
   "steps": [
     {
