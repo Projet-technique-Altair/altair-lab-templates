@@ -1,0 +1,44 @@
+name: Lab Templates CD
+
+on:
+  # Manual dispatch is the safest starting point here.
+  # Each run targets one template directory and one output image.
+  workflow_dispatch:
+    inputs:
+      template_dir:
+        description: "Template directory inside this repository, for example ctf-terminal"
+        required: true
+        type: string
+      image_name:
+        description: "Artifact Registry image name for the selected template"
+        required: true
+        type: string
+      image_tag:
+        description: "Docker tag to push. Start with latest if you do not have a stronger versioning strategy yet"
+        required: false
+        default: latest
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-push:
+    # Calls the reusable workflow hosted in altair-ci.
+    uses: Projet-technique-Altair/altair-ci/.github/workflows/templates-cd.yml@main
+    with:
+      # Shared platform-level values, expected as repository or organization variables.
+      gcp_project_id: ${{ vars.GCP_PROJECT_ID }}
+      artifact_registry_host: ${{ vars.GCP_ARTIFACT_REGISTRY_HOST }}
+      workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+      deploy_service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      # Dedicated registry repository for lab runtime images.
+      artifact_registry_repo: ${{ vars.GCP_ARTIFACT_REPO }}
+
+      # Inputs selected manually when the workflow is launched.
+      template_dir: ${{ inputs.template_dir }}
+      image_name: ${{ inputs.image_name }}
+      image_tag: ${{ inputs.image_tag }}
+      platform: linux/amd64
