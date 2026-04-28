@@ -12,10 +12,10 @@
   "difficulty": "easy",
   "category": "privilege_escalation",
   "estimated_duration": "30-45min",
-  "story": "You are a pentester for TechCorp. An internal server runs a backup script as root via cron. Your mission: exploit a PATH misconfiguration to read the root flag.",
+  "story": "You are a pentester assessing a TechCorp internal server. The machine runs a root cron job that calls a backup script every minute. The script appears simple, but it relies on the environment PATH when calling one of its tools. Your mission is to inspect the scheduled task, identify the command that can be hijacked, place a controlled executable earlier in PATH, and wait for root's automation to copy the protected flag into a readable location.",
   "objectives": "Capture the flag located at /root/flag.txt by exploiting PATH hijacking. After exploitation, the flag will be readable via /opt/output/flag.txt.",
   "prerequisites": null,
-  "template_path": "europe-west9-docker.pkg.dev/altair-isen/altair-labs/lab-path-hijacking-guided:latest",
+  "template_path": "lab-path-hijacking-guided:v1",
   "steps": [
     {
       "step_number": 1,

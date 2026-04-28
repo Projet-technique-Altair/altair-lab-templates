@@ -12,7 +12,7 @@
   "difficulty": "easy",
   "category": "network_recon",
   "estimated_duration": "15-25min",
-  "story": "You are a junior analyst. Perform a first local reconnaissance and report exposed services running on the sandbox host.",
+  "story": "You are starting your first shift as a junior security analyst. Before touching a real target, you must learn how to perform safe local reconnaissance inside a controlled sandbox. The host intentionally exposes a small number of services. Your job is to verify that Nmap is available, try the most common scan modes, compare their outputs, and produce a clean report of the open ports and services on localhost.",
   "objectives": "Learn core Nmap commands, understand common scan modes, identify open ports on localhost, and recognize exposed services.",
   "prerequisites": null,
   "template_path": "lab-nmap-basics:v1",

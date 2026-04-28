@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  background: #0a0f1f;
+  color: #e6edff;
+}
+
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background: #121a32;
+  border: 1px solid #2d3b66;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+input,
+button {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #3f538a;
+  background: #0e1630;
+  color: #f6f8ff;
+}
+
+button {
+  background: #2858f0;
+  border-color: #2858f0;
+  cursor: pointer;
+}
+
+pre {
+  background: #080d1d;
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+}

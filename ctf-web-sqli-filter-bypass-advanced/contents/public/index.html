@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mission Lookup</title>
+    <link rel="stylesheet" href="./public/styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>Mission Lookup API</h1>
+      <p>Find a mission by id and inspect how the backend validates your input.</p>
+
+      <section class="card">
+        <label>id</label>
+        <input id="idInput" value="1" />
+        <button id="runBtn">GET /api/mission</button>
+      </section>
+
+      <section class="card">
+        <h2>Response</h2>
+        <pre id="output">No request yet.</pre>
+      </section>
+    </main>
+
+    <script src="./public/app.js"></script>
+  </body>
+</html>

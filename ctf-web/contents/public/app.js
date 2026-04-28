@@ -13,7 +13,7 @@ function setStatus(message, ok) {
 
 unlockBtn.addEventListener("click", async () => {
   const code = document.getElementById("accessCode").value.trim();
-  const res = await fetch("/unlock", {
+  const res = await fetch("./unlock", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code })
@@ -31,7 +31,7 @@ runBtn.addEventListener("click", async () => {
   const expression = document.getElementById("expression").value.trim();
   result.textContent = "Running...";
 
-  const res = await fetch("/diagnose", {
+  const res = await fetch("./diagnose", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ expression })

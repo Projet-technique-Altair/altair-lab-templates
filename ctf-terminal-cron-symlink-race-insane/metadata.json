@@ -1,0 +1,110 @@
+{
+  "lab_id": "307a2110-1422-4a88-8684-41d5bea7886e",
+  "name": "Cron Chain + Symlink Race (Insane)",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "advanced",
+  "category": "privilege_escalation",
+  "estimated_duration": "60-90min",
+  "story": "You are investigating a busy operations server where automation has replaced manual administration. Several cron jobs move archives and publish reports, and each job runs under a different account. At first, the upload archive process only seems to grant access to a backup user, but that account can influence files consumed by a second root-owned publisher. Your mission is to chain the weaknesses: first pivot through tar wildcard injection, then win a check-then-use symlink race to write a root-trusted file and recover the flag.",
+  "objectives": "Exploit wildcard injection in a cron-executed tar command to pivot from student to backup, then abuse a root symlink race to gain root and capture /root/flag.txt.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-cron-symlink-race-insane:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Map scheduled tasks",
+      "description": "Enumerate /etc/crontab and identify the script executed each minute as backup user.",
+      "question": "What is the full path of the cron script executed as user backup?",
+      "expected_answer": "/opt/ops/archive-uploads.sh",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 4,
+          "text": "Start with: cat /etc/crontab"
+        },
+        {
+          "hint_number": 2,
+          "cost": 6,
+          "text": "Find the entry running every minute with user backup."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Pivot to backup",
+      "description": "Exploit wildcard argument injection in tar to execute commands as backup and obtain a reusable shell context.",
+      "question": "After successful pivot, which user context do you gain?",
+      "expected_answer": "backup",
+      "validation_type": "exact_match",
+      "points": 25,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "Inspect /opt/ops/archive-uploads.sh and look for tar with wildcard expansion."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "Use crafted file names with --checkpoint and --checkpoint-action."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Find the race target",
+      "description": "Analyze the root publisher script and identify the destination file affected by a check-then-use gap.",
+      "question": "Which destination file path is vulnerable to the symlink race?",
+      "expected_answer": "/var/ops/reports/public/latest-report.txt",
+      "validation_type": "exact_match",
+      "points": 25,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "Read /opt/ops/publish-report.sh."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "The script checks -L first, then sleeps, then writes."
+        }
+      ]
+    },
+    {
+      "step_number": 4,
+      "title": "Win root and capture flag",
+      "description": "Use the race to write a sudoers rule as root, switch back to student, then read /root/flag.txt.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{cron_chain_symlink_race_root}",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 10,
+          "text": "Make root write attacker-controlled report content into /etc/sudoers.d via symlink."
+        },
+        {
+          "hint_number": 2,
+          "cost": 14,
+          "text": "Payload content can grant student NOPASSWD sudo."
+        },
+        {
+          "hint_number": 3,
+          "cost": 16,
+          "text": "After the sudoers file appears, use sudo to read /root/flag.txt."
+        }
+      ]
+    }
+  ]
+}

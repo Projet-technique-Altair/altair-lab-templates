@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  background: #10151d;
+  color: #ecf2ff;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background: #192230;
+  border: 1px solid #30415b;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+input,
+button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #4f6891;
+  border-radius: 8px;
+  background: #0e1520;
+  color: #ffffff;
+}
+
+button {
+  margin-top: 10px;
+  background: #1f8d73;
+  border-color: #1f8d73;
+}
+
+pre {
+  background: #0a0f17;
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+}

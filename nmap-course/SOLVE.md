@@ -94,7 +94,7 @@ From the scan output, report the result in the expected format:
 22/tcp ssh, 80/tcp http
 ```
 
-This is the exact answer expected for step 4.
+This is the exact answer expected for step 7.
 
 ## Full intended resolution flow
 

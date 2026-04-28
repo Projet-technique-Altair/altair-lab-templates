@@ -1,0 +1,84 @@
+{
+  "lab_id": "8d7c1311-7e69-4ac2-a645-d230accb561c",
+  "name": "SQLi UNION Exfiltration (Intermediate)",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "medium",
+  "category": "web_security",
+  "estimated_duration": "30-45min",
+  "story": "A product catalog API was released quickly to support an internal store. The search endpoint returns normal product rows, but the query is built by interpolating the search term into SQL. Your mission is to move beyond simple error testing: find the injectable parameter, determine the shape of the original SELECT, build a compatible UNION payload, and use it to read the flag stored in a separate secrets table.",
+  "objectives": "Exploit the vulnerable search endpoint with UNION SELECT and retrieve the flag stored in the internal secrets table.",
+  "prerequisites": null,
+  "template_path": "lab-sqli-union-intermediate:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Identify the injection point",
+      "description": "Inspect how the search term is consumed by the SQL query.",
+      "question": "Which query parameter is injectable on the search endpoint?",
+      "expected_answer": "q",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 3,
+          "text": "Use /api/search?q=..."
+        },
+        {
+          "hint_number": 2,
+          "cost": 5,
+          "text": "The SQL query is assembled with string interpolation."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Map the UNION shape",
+      "description": "Determine the number and type of columns required for a valid UNION payload.",
+      "question": "How many columns does the vulnerable SELECT return?",
+      "expected_answer": "3",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 6,
+          "text": "Start by probing with ORDER BY or NULL-based UNION payloads."
+        },
+        {
+          "hint_number": 2,
+          "cost": 8,
+          "text": "The base query returns id, name, price."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Exfiltrate the secret",
+      "description": "Use UNION SELECT to read from the internal secrets table and capture the flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{sqli_union_exfiltration_intermediate}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "The table is named secrets and contains key/value columns."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "Make your UNION return three columns compatible with the base query."
+        }
+      ]
+    }
+  ]
+}

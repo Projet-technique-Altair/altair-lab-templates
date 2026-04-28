@@ -12,10 +12,10 @@
   "difficulty": "medium",
   "category": "web_security",
   "estimated_duration": "30-45min",
-  "story": "A damaged orbital station left its diagnostics console online. Your mission is to unlock access and exploit a JavaScript eval flaw to recover the flag.",
+  "story": "A damaged orbital station still exposes its emergency diagnostics console. The public page hides the bootstrap code in frontend assets, and the backend trusts an unlocked operator console to evaluate diagnostic expressions. You must first recover the bootstrap code, unlock the console, then abuse the server-side JavaScript eval sink to read the flag file from disk.",
   "objectives": "Capture the flag located at /opt/flag/flag.txt by exploiting the eval-based command injection in the diagnostics console.",
   "prerequisites": null,
-  "template_path": "europe-west9-docker.pkg.dev/altair-isen/altair-labs/lab-orbital-console-injection:latest",
+  "template_path": "lab-orbital-console-injection:v1",
   "steps": [
     {
       "step_number": 1,

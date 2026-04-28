@@ -1,0 +1,84 @@
+{
+  "lab_id": "624dbda3-d1eb-4703-80a5-8d296a87b5de",
+  "name": "SQLi Login Bypass (Easy)",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "easy",
+  "category": "web_security",
+  "estimated_duration": "20-30min",
+  "story": "You are testing a legacy intranet portal that still authenticates users with a hand-built SQL query. The interface looks like a normal username and password form, but the backend directly inserts form values into the WHERE clause. Your goal is to observe the login flow, identify the injectable field, alter the query logic to become the administrator, then request the protected flag endpoint.",
+  "objectives": "Exploit the vulnerable login query, gain admin context, and capture the flag from the protected endpoint.",
+  "prerequisites": null,
+  "template_path": "lab-sqli-login-easy:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Find the vulnerable field",
+      "description": "Inspect the behavior of the login endpoint and identify which field is injectable.",
+      "question": "Which HTTP field is directly used in the vulnerable SQL WHERE clause with no sanitization?",
+      "expected_answer": "username",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 3,
+          "text": "Watch the request payload sent by the login form."
+        },
+        {
+          "hint_number": 2,
+          "cost": 5,
+          "text": "The vulnerability is in a field compared to the users table."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Bypass authentication",
+      "description": "Use SQL injection in the login request to become administrator.",
+      "question": "Which role must be returned by /api/me after your bypass?",
+      "expected_answer": "admin",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 6,
+          "text": "The server accepts crafted input that changes the WHERE condition logic."
+        },
+        {
+          "hint_number": 2,
+          "cost": 8,
+          "text": "Try classic quote-based payloads in username."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Capture the flag",
+      "description": "Once authenticated as admin, call the protected endpoint and retrieve the flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{sqli_login_bypass_easy}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "The flag endpoint is only available for role=admin."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "After bypassing login, call /api/flag."
+        }
+      ]
+    }
+  ]
+}

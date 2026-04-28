@@ -1,0 +1,84 @@
+{
+  "lab_id": "5da0345e-c448-4ea5-83f4-48101ac82828",
+  "name": "SQLi Filter Bypass (Advanced)",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "advanced",
+  "category": "web_security",
+  "estimated_duration": "40-60min",
+  "story": "A development team rushed a mission lookup portal into production after adding a blacklist that they believed would stop SQL injection. The filter blocks a few lowercase tokens, but the backend still concatenates the request parameter directly into a SQL query. Your job is to study the endpoint, understand why case-sensitive filtering is not a defense, bypass the blacklist with uppercase SQL, and extract the hidden flag from the internal secrets table.",
+  "objectives": "Understand filter weaknesses, bypass token checks, and exfiltrate the flag via SQL injection.",
+  "prerequisites": null,
+  "template_path": "lab-sqli-filter-bypass-advanced:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Locate the vulnerable parameter",
+      "description": "Inspect the mission lookup endpoint and identify the injectable parameter.",
+      "question": "Which query parameter is used directly in SQL without parameterization?",
+      "expected_answer": "id",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 4,
+          "text": "The endpoint path is /api/mission?id=..."
+        },
+        {
+          "hint_number": 2,
+          "cost": 6,
+          "text": "The base query uses WHERE id = <input>."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Bypass the naive filter",
+      "description": "The application blocks lowercase SQL tokens only. Bypass this weak check.",
+      "question": "Which uppercase SQL clause can bypass the lowercase-only blacklist?",
+      "expected_answer": "UNION SELECT",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 8,
+          "text": "Token checks are case-sensitive."
+        },
+        {
+          "hint_number": 2,
+          "cost": 10,
+          "text": "Try the same payload with uppercase keywords."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Extract the flag",
+      "description": "After bypassing the filter, union data from the secrets table and capture the flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{sqli_filter_bypass_advanced}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 10,
+          "text": "The endpoint returns three columns: id, name, difficulty."
+        },
+        {
+          "hint_number": 2,
+          "cost": 14,
+          "text": "Read from table secrets(key, value)."
+        }
+      ]
+    }
+  ]
+}

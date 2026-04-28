@@ -1,0 +1,89 @@
+{
+  "lab_id": "291ac871-d595-4417-a276-82bf95ab82ed",
+  "name": "Cron Wildcard PrivEsc (Hard)",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "advanced",
+  "category": "privilege_escalation",
+  "estimated_duration": "45-60min",
+  "story": "An internal operations host automatically archives files uploaded by users. The task runs as root and was written quickly to keep the upload directory tidy. The script looks harmless, but it expands attacker-controlled filenames directly inside a tar command. Your objective is to inspect the scheduled jobs, understand how wildcard expansion becomes command-line option injection, and turn the archive workflow into controlled root command execution.",
+  "objectives": "Enumerate cron tasks, identify wildcard injection in a root backup script, exploit tar checkpoint options, and capture /root/flag.txt.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-cron-wildcard-hard:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Identify the privileged cron task",
+      "description": "Enumerate system cron entries and locate the root job responsible for archiving uploads.",
+      "question": "What is the full path of the root script that archives uploads every minute?",
+      "expected_answer": "/opt/ops/archive-uploads.sh",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 4,
+          "text": "Start with: cat /etc/crontab"
+        },
+        {
+          "hint_number": 2,
+          "cost": 6,
+          "text": "Ignore the cleanup task and focus on the archive task."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Find the wildcard injection primitive",
+      "description": "Read the script and determine which attacker-controlled directory is expanded with a wildcard inside tar.",
+      "question": "Which directory is archived with an unsafe wildcard expansion?",
+      "expected_answer": "/srv/portal/uploads",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 7,
+          "text": "Inspect /opt/ops/archive-uploads.sh carefully."
+        },
+        {
+          "hint_number": 2,
+          "cost": 10,
+          "text": "Look for tar usage with * and check directory write permissions."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Exploit tar option injection and capture flag",
+      "description": "Create crafted filenames interpreted as tar options and execute a payload as root via cron. Copy the root flag to a readable file.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{cron_wildcard_checkpoint_escape}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 10,
+          "text": "Research tar wildcard injection with --checkpoint and --checkpoint-action."
+        },
+        {
+          "hint_number": 2,
+          "cost": 14,
+          "text": "Create files named '--checkpoint=1' and '--checkpoint-action=exec=sh shell.sh' in the uploads directory."
+        },
+        {
+          "hint_number": 3,
+          "cost": 16,
+          "text": "Your shell script payload can copy /root/flag.txt to /tmp/flag.txt, then wait for cron."
+        }
+      ]
+    }
+  ]
+}

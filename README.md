@@ -25,16 +25,44 @@ Templates are designed to run in **Google Kubernetes Engine** via the Lab API Se
 
 ---
 
+## New Starter Pack (SQLi + Linux Access)
+
+The repository now includes a larger starter pack designed for training and AI-assisted generation examples:
+
+### Web CTF (SQL Injection)
+- `ctf-web-sqli-login-easy/`  
+  Login bypass through raw SQL string interpolation.
+- `ctf-web-sqli-union-intermediate/`  
+  UNION-based data exfiltration from an internal secrets table.
+- `ctf-web-sqli-filter-bypass-advanced/`  
+  SQLi with naive blacklist bypass and final flag extraction.
+
+### Terminal CTF (Linux Access/Security)
+- `ctf-terminal-sudo-find-easy/`  
+  Privilege escalation through dangerous sudo allowance on `find`.
+- `ctf-terminal-suid-maint-runner/`  
+  Writable script executed by a SUID root helper.
+- `ctf-terminal-capabilities-reader/`  
+  Abuse of Linux capabilities (`cap_dac_read_search`) to access root-only data.
+- `ctf-terminal-cron-wildcard-hard/`  
+  Root cron wildcard injection in `tar` (`--checkpoint-action`) for advanced privesc.
+- `ctf-terminal-cron-symlink-race-insane/`  
+  Two-stage chain: cron wildcard pivot to backup, then root symlink race to sudoers write.
+
+All new templates keep the same `metadata.json` schema used by existing labs (same root fields, steps, hints, scoring model).
+
+---
+
 ## Lab Types Alignment
 
-Altaïr defines 5 lab types. This repository currently provides templates for **2 types**:
+Altaïr defines 5 lab types. This repository currently provides templates for **2 types** (with 2 web variants):
 
 | Lab Type | Template Available | Description |
 | --- | --- | --- |
 | **Lab Cours** | ❌ Not yet | Educational environment without exploitation |
 | **CTF Terminal Guidé** | ✅ `ctf-terminal/` | Guided terminal exploitation with step-by-step instructions |
 | **CTF Terminal Non Guidé** | ❌ Variant of terminal | Same image, different metadata structure |
-| **CTF Web Guidé** | ✅ `ctf-web/` | Guided web exploitation with HTTP challenges |
+| **CTF Web Guidé** | ✅ `ctf-web/`, `ctf-web-absolute-paths/` | Guided web exploitation with HTTP challenges |
 | **CTF Web Non Guidé** | ❌ Variant of web | Same image, different metadata structure |
 
 **Note:** "Guidé" vs "Non Guidé" is primarily a **metadata difference** (step-by-step vs hints-only), not necessarily separate Docker images.
@@ -59,6 +87,20 @@ altair-lab-templates/
     ├── metadata.json          # Lab structure
     ├── contents/              # Web application
     │   ├── server.js          # Express server (vulnerable)
+    │   ├── package.json
+    │   ├── flag.txt
+    │   ├── public/
+    │   │   ├── index.html
+    │   │   ├── app.js
+    │   │   └── styles.css
+    │   └── README.md
+    └── README.md
+
+└── ctf-web-absolute-paths/     # Web template variant using absolute paths
+    ├── Dockerfile
+    ├── metadata.json
+    ├── contents/
+    │   ├── server.js
     │   ├── package.json
     │   ├── flag.txt
     │   ├── public/

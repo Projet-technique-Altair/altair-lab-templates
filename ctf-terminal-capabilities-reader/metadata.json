@@ -1,0 +1,84 @@
+{
+  "lab_id": "fb5a7c0f-7f1d-48fa-892f-7f82e0bafe40",
+  "name": "Linux Capabilities Abuse (Medium)",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "medium",
+  "category": "linux_security",
+  "estimated_duration": "25-35min",
+  "story": "You have been dropped onto a Linux host after a hardening campaign. The administrators removed the obvious SUID helpers, but a custom support utility was left behind with elevated Linux capabilities. Your job is to prove that capabilities can be as dangerous as SUID when they bypass normal file permissions. Enumerate the system, identify the unusual binary, understand what its capability allows, then use it to read data that should only be available to root.",
+  "objectives": "Identify dangerous file capabilities and abuse them to read /root/flag.txt.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-capabilities-reader:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Enumerate capabilities",
+      "description": "Search for binaries with non-empty Linux capabilities.",
+      "question": "Which binary has a dangerous capability that can bypass file read checks?",
+      "expected_answer": "/usr/local/bin/syscat",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 4,
+          "text": "Use getcap -r / 2>/dev/null"
+        },
+        {
+          "hint_number": 2,
+          "cost": 6,
+          "text": "Look for a custom binary under /usr/local/bin."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Identify the capability",
+      "description": "Determine the exact capability assigned to the vulnerable binary.",
+      "question": "What capability is assigned to /usr/local/bin/syscat?",
+      "expected_answer": "cap_dac_read_search+ep",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 7,
+          "text": "The capability string is printed by getcap."
+        },
+        {
+          "hint_number": 2,
+          "cost": 10,
+          "text": "This capability allows bypassing DAC read/search checks."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Capture the flag",
+      "description": "Use the capable binary to read root-only data and retrieve the flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{linux_capability_data_access}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 9,
+          "text": "Try running /usr/local/bin/syscat on /root/flag.txt."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "No sudo is required if the capability is correctly configured."
+        }
+      ]
+    }
+  ]
+}

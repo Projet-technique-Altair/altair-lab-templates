@@ -1,0 +1,84 @@
+{
+  "lab_id": "ea9f2b3d-9770-4df5-96e1-a36dd38651b3",
+  "name": "SUID Runner Misconfiguration (Medium)",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "medium",
+  "category": "linux_security",
+  "estimated_duration": "30-45min",
+  "story": "A maintenance team deployed a small SUID helper to run system health checks with root privileges. The binary itself looks simple, but it delegates the real work to a shell script stored in a maintenance directory. That script is writable by the maintenance group, which includes the low-privileged user. Your task is to connect those facts, modify the privileged execution path, and use the helper to make root-only data readable.",
+  "objectives": "Discover writable privileged script execution and exploit it to read /root/flag.txt.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-suid-maint-runner:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Discover the privileged helper",
+      "description": "Enumerate SUID binaries and identify the custom maintenance runner.",
+      "question": "What is the path of the vulnerable SUID binary?",
+      "expected_answer": "/usr/local/bin/maint-runner",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 4,
+          "text": "Use find / -perm -4000 2>/dev/null"
+        },
+        {
+          "hint_number": 2,
+          "cost": 6,
+          "text": "Look for a non-standard binary under /usr/local/bin."
+        }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Find writable privileged execution",
+      "description": "Identify which script is executed by the SUID binary and verify write access as student.",
+      "question": "Which script file can be edited and is executed by the SUID helper?",
+      "expected_answer": "/opt/maint/run-check.sh",
+      "validation_type": "exact_match",
+      "points": 30,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 7,
+          "text": "Inspect strings output of the SUID binary."
+        },
+        {
+          "hint_number": 2,
+          "cost": 10,
+          "text": "Check ownership and group permissions of /opt/maint/run-check.sh."
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Exploit and capture flag",
+      "description": "Inject a payload in the writable script to copy the flag to a readable location, then run the SUID helper.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{suid_runner_misconfig}",
+      "validation_type": "exact_match",
+      "points": 50,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 9,
+          "text": "Append a command that copies /root/flag.txt into /tmp/flag.txt."
+        },
+        {
+          "hint_number": 2,
+          "cost": 12,
+          "text": "Run /usr/local/bin/maint-runner after editing the script."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family: "Fira Code", monospace;
+  background: #0f0d14;
+  color: #f2eefe;
+}
+
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background: #1b1725;
+  border: 1px solid #3e3159;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+input,
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #5d4a88;
+  background: #120f1c;
+  color: #ffffff;
+}
+
+button {
+  margin-top: 10px;
+  background: #c24f3d;
+  border-color: #c24f3d;
+}
+
+pre {
+  background: #0a0811;
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+}
