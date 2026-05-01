@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
     findutils \
     bash \
@@ -19,5 +19,7 @@ RUN printf '%s\n' \
     'student ALL=(root) NOPASSWD: /usr/bin/find' \
     > /etc/sudoers.d/student-find && \
     chmod 440 /etc/sudoers.d/student-find
+
+USER student
 
 CMD ["bash", "-lc", "tail -f /dev/null"]

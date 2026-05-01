@@ -9,8 +9,11 @@ COPY contents /app
 
 RUN mkdir -p /opt/flag \
   && cp /app/flag.txt /opt/flag/flag.txt \
-  && chmod 444 /opt/flag/flag.txt
+  && chmod 444 /opt/flag/flag.txt \
+  && chown -R node:node /app
 
 EXPOSE 3000
+
+USER node
 
 CMD ["npm", "start"]

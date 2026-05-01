@@ -1,3 +1,4 @@
 .idea/
 node_modules
 package-lock.json
+!ctf-web/contents/package-lock.json

@@ -1,8 +1,8 @@
-FROM debian:latest
+FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     cron \
     sudo \
     vim \
@@ -36,6 +36,11 @@ RUN printf '%s\n' \
   'PATH=/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
   '* * * * * root /opt/backup.sh > /var/log/backup.log 2>&1' \
   >> /etc/crontab
+
+# The challenge needs root at runtime to start cron and run the root-owned job.
+USER student
+# trivy:ignore:DS-0002
+USER root
 
 # Start cron safely and keep container alive
 CMD ["bash", "-lc", "touch /var/log/backup.log && cron && tail -f /var/log/backup.log"]

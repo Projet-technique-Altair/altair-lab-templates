@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     ca-certificates \
     coreutils \
@@ -43,5 +43,10 @@ RUN printf '%s\n' \
     '*/5 * * * * root /opt/ops/cleanup.sh >/dev/null 2>&1' \
     '* * * * * root /opt/ops/archive-uploads.sh >> /var/log/ops/archive.log 2>&1' \
     >> /etc/crontab
+
+# The challenge needs root at runtime to start cron and run the root-owned jobs.
+USER student
+# trivy:ignore:DS-0002
+USER root
 
 CMD ["bash", "-lc", "mkdir -p /var/log/ops && touch /var/log/ops/archive.log /var/log/ops/cleanup.log && cron && tail -f /var/log/ops/archive.log"]

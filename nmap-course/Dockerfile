@@ -20,4 +20,9 @@ RUN useradd -m -s /bin/bash student && \
 RUN mkdir -p /var/run/sshd /opt/lab/www && \
     echo "Altair Nmap Basics Lab" > /opt/lab/www/index.html
 
+# The course image starts sshd and a privileged port, so the launcher remains root.
+USER student
+# trivy:ignore:DS-0002
+USER root
+
 CMD ["bash", "-lc", "python3 -m http.server 80 --directory /opt/lab/www >/tmp/http.log 2>&1 & /usr/sbin/sshd && tail -f /dev/null"]

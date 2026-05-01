@@ -11,7 +11,13 @@ RUN mkdir -p /opt/flag && \
     cp flag.txt /opt/flag/flag.txt && \
     chmod 444 /opt/flag/flag.txt
 
+RUN addgroup -S app && \
+    adduser -S -G app app && \
+    chown -R app:app /app
+
 EXPOSE 3000
 ENV PORT=3000
+
+USER app
 
 CMD ["python", "server.py"]
