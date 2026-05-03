@@ -3,44 +3,24 @@ FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cron \
+    libcap2-bin \
     sudo \
-    vim \
-    nano \
+    bash \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Create user student
-RUN useradd -m -s /bin/bash student && \
+RUN id -u student >/dev/null 2>&1 || useradd -m -s /bin/bash student && \
     echo "student:student" | chpasswd
 
-# Flag setup
-RUN echo "FLAG{path_hijacking_pwned_2026}" > /root/flag.txt && \
-    chmod 600 /root/flag.txt
+RUN echo "FLAG{linux_capability_data_access}" > /flag.txt && \
+    chown root:root /flag.txt && \
+    chmod 600 /flag.txt
 
-# Root-owned output directory (student can read files, cannot create/overwrite)
-RUN mkdir -p /opt/output && \
-    chown root:root /opt/output && \
-    chmod 755 /opt/output
+RUN cp /bin/cat /usr/local/bin/syscat && \
+    chown root:root /usr/local/bin/syscat && \
+    chmod 755 /usr/local/bin/syscat && \
+    setcap cap_dac_read_search+ep /usr/local/bin/syscat
 
-# Vulnerable backup script
-COPY backup.sh /opt/backup.sh
-RUN chmod +x /opt/backup.sh
-
-# Ensure /tmp is writable and sticky (normal behavior)
-RUN chmod 1777 /tmp
-
-# Cron: vulnerable PATH includes /tmp first
-RUN printf '%s\n' \
-  'SHELL=/bin/bash' \
-  'PATH=/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
-  '* * * * * root /opt/backup.sh > /var/log/backup.log 2>&1' \
-  >> /etc/crontab
-
-# The challenge needs root at runtime to start cron and run the root-owned job.
 USER student
-# trivy:ignore:DS-0002
-USER root
 
-# Start cron safely and keep container alive
-CMD ["bash", "-lc", "touch /var/log/backup.log && cron && tail -f /var/log/backup.log"]
+CMD ["/bin/bash"]
