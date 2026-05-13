@@ -1,4 +1,37 @@
+# Logs / runtime
+*.log
+*.tmp
+*.pid
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Node / Python artifacts
+node_modules/
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+
+# Build archives / images
+*.tar
+*.img
+*.gz
+
+# IDE / editors
 .idea/
-node_modules
+.vscode/
+.history/
+*.code-workspace
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Template-specific lockfiles
 package-lock.json
 !ctf-web/contents/package-lock.json
