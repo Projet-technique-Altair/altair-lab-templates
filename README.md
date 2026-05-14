@@ -17,6 +17,7 @@ These images are meant to run in isolated, ephemeral environments through the La
 | `ctf-terminal-cron-wildcard-hard/` | Cron Wildcard PrivEsc | `ctf_terminal_guided` | advanced | `privilege_escalation` | 45-60min | 3 |
 | `ctf-terminal-cron-symlink-race-insane/` | Cron Chain + Symlink Race | `ctf_terminal_guided` | advanced | `privilege_escalation` | 60-90min | 4 |
 | `ctf-web/` | Orbital Console Injection | `ctf_web_guided` | medium | `web_security` | 30-45min | 3 |
+| `ctf-web-random-flag-smoke/` | Random Web Flag Smoke Test | `ctf_web_guided` | easy | `web_security` | 2-5min | 1 |
 | `ctf-web-sqli-login-easy/` | SQLi Login Bypass | `ctf_web_guided` | easy | `web_security` | 20-30min | 3 |
 | `ctf-web-sqli-union-intermediate/` | SQLi UNION Exfiltration | `ctf_web_guided` | medium | `web_security` | 30-45min | 3 |
 | `ctf-web-sqli-filter-bypass-advanced/` | SQLi Filter Bypass | `ctf_web_guided` | advanced | `web_security` | 40-60min | 3 |

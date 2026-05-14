@@ -43,7 +43,7 @@
       "title": "Identify the capability",
       "description": "Determine the exact capability assigned to the vulnerable binary.",
       "question": "What capability is assigned to /usr/local/bin/syscat?",
-      "expected_answer": "cap_dac_read_search+ep",
+      "expected_answer": "cap_dac_override=ep",
       "validation_type": "exact_match",
       "points": 30,
       "hints": [
@@ -55,7 +55,7 @@
         {
           "hint_number": 2,
           "cost": 10,
-          "text": "This capability allows bypassing DAC read/search checks."
+          "text": "This capability allows bypassing DAC file read checks."
         }
       ]
     },

@@ -116,7 +116,7 @@ while true; do
 done
 EOF
 chmod +x /tmp/race.sh
-/tmp/race.sh &
+bash -p /tmp/race.sh &
 RACE_PID=$!
 sleep 90
 kill "$RACE_PID"

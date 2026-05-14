@@ -8,7 +8,7 @@ Read the root-only flag:
 FLAG{linux_capability_data_access}
 ```
 
-The vulnerable primitive is a custom binary with the Linux capability `cap_dac_read_search+ep`.
+The vulnerable primitive is a custom binary with the Linux capability `cap_dac_override=ep`.
 
 ## Platform Session
 
@@ -25,7 +25,7 @@ getcap -r / 2>/dev/null
 You should find:
 
 ```text
-/usr/local/bin/syscat cap_dac_read_search+ep
+/usr/local/bin/syscat cap_dac_override=ep
 ```
 
 Submit for step 1:
@@ -39,15 +39,15 @@ Submit for step 1:
 The capability is:
 
 ```text
-cap_dac_read_search+ep
+cap_dac_override=ep
 ```
 
-This capability can bypass normal discretionary access checks for file reads and directory traversal.
+This capability can bypass normal discretionary access checks for file reads.
 
 Submit for step 2:
 
 ```text
-cap_dac_read_search+ep
+cap_dac_override=ep
 ```
 
 ## Step 3. Read The Flag

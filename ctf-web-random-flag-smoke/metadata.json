@@ -1,0 +1,42 @@
+{
+  "lab_id": "0f34dfab-1e00-479a-a47d-ec2ebc1027f9",
+  "name": "Random Web Flag Smoke Test",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "easy",
+  "category": "web_security",
+  "estimated_duration": "2-5min",
+  "story": "A minimal web service displays the session-specific Altair flag as soon as the learner opens the lab.",
+  "objectives": "Verify that web labs receive ALTAIR_FLAG_STEP_1 and that the learner can submit the generated session flag immediately.",
+  "prerequisites": null,
+  "template_path": "lab-web-random-flag-smoke:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Read the random session flag",
+      "description": "Open the web lab and copy the flag displayed on the page.",
+      "question": "What is the random session flag displayed by the web lab?",
+      "expected_answer": "ALTAIR{placeholder_web_random_flag}",
+      "validation_type": "exact_match",
+      "points": 100,
+      "hints": [
+        {
+          "hint_number": 1,
+          "cost": 0,
+          "text": "The flag is displayed directly on the first page."
+        },
+        {
+          "hint_number": 2,
+          "cost": 0,
+          "text": "The app reads ALTAIR_FLAG_STEP_1 from the container environment."
+        }
+      ]
+    }
+  ]
+}

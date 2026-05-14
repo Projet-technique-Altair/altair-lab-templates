@@ -6,7 +6,7 @@ ARCHIVE_DIR="/opt/backups"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 
 /bin/mkdir -p "$ARCHIVE_DIR"
-/bin/cd "$UPLOAD_DIR"
+cd "$UPLOAD_DIR"
 
 if [ -z "$(/bin/ls -A "$UPLOAD_DIR")" ]; then
   echo "[!] Nothing to archive"

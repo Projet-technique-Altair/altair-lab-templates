@@ -18,9 +18,9 @@ RUN id -u student >/dev/null 2>&1 || useradd -m -s /bin/bash student && \
 RUN groupadd webops && \
     usermod -aG webops student
 
-RUN echo "FLAG{cron_wildcard_checkpoint_escape}" > /flag.txt && \
-    chown root:root /flag.txt && \
-    chmod 600 /flag.txt
+RUN echo "FLAG{cron_wildcard_checkpoint_escape}" > /root/flag.txt && \
+    chown root:root /root/flag.txt && \
+    chmod 600 /root/flag.txt
 
 RUN mkdir -p /srv/portal/uploads /opt/backups /opt/ops /var/log/ops && \
     chown root:webops /srv/portal/uploads && \
@@ -52,6 +52,18 @@ RUN printf '%s\n' \
     '* * * * * root /opt/ops/archive-uploads.sh >> /var/log/ops/archive.log 2>&1' \
     >> /etc/crontab
 
-USER root
+RUN mkdir -p /opt/altair && \
+    printf '%s\n' \
+    '#!/bin/bash' \
+    'set -euo pipefail' \
+    '/usr/bin/sudo -n /usr/sbin/cron || true' \
+    > /opt/altair/startup.sh && \
+    chown root:root /opt/altair/startup.sh && \
+    chmod 755 /opt/altair/startup.sh && \
+    printf '%s\n' 'student ALL=(root) NOPASSWD: /usr/sbin/cron ""' > /etc/sudoers.d/start-cron && \
+    chown root:root /etc/sudoers.d/start-cron && \
+    chmod 440 /etc/sudoers.d/start-cron
 
-CMD ["bash", "-lc", "cron && exec su - student"]
+USER student
+
+CMD ["bash", "-lc", "/opt/altair/startup.sh; exec bash"]
