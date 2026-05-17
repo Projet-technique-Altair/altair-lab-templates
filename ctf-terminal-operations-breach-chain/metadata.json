@@ -1,0 +1,86 @@
+{
+  "lab_id": "9c6f5f2a-4f1c-4f16-a50e-1dc8a6c7a3bd",
+  "name": "Operations Breach Chain",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "advanced",
+  "category": "privilege_escalation",
+  "estimated_duration": "60-90min",
+  "story": "You land on a shared operations host where routine automation has quietly accumulated risk. A writable upload directory feeds a scheduled archive task, an internal runbook service only answers on localhost, and an operator maintenance allowance trusts the environment more than it should. Your job is to map the host, pivot through the backup workflow, recover the internal token, reach the operator context, then turn a privileged maintenance command into root access.",
+  "objectives": "Chain cron wildcard injection, a local-only service, and sudo PATH hijacking across multiple Unix users to recover /root/flag.txt.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-operations-breach-chain:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Map the scheduled archive task",
+      "description": "Inspect system cron entries and identify the script executed as backup.",
+      "question": "Which script runs every minute as user backup?",
+      "expected_answer": "/opt/ops/archive-uploads.sh",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": [
+        { "hint_number": 1, "cost": 3, "text": "Start with cat /etc/crontab." },
+        { "hint_number": 2, "cost": 5, "text": "Look for the entry executed by backup." }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Pivot to backup",
+      "description": "Exploit wildcard option injection in the archive job and obtain the next Unix context.",
+      "question": "Which user context do you gain after the first pivot?",
+      "expected_answer": "backup",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        { "hint_number": 1, "cost": 6, "text": "The archive script expands attacker-controlled filenames inside tar." },
+        { "hint_number": 2, "cost": 9, "text": "Use tar checkpoint files to create a reusable shell." }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Recover the internal token",
+      "description": "Search backup-readable artifacts and query the local-only runbook service.",
+      "question": "What token is required by the local runbook service?",
+      "expected_answer": "ORBIT-31415",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        { "hint_number": 1, "cost": 6, "text": "Look under /var/lib/ops after the backup pivot." },
+        { "hint_number": 2, "cost": 8, "text": "The service listens only on 127.0.0.1:8081 and expects X-Ops-Token." }
+      ]
+    },
+    {
+      "step_number": 4,
+      "title": "Reach the operator path",
+      "description": "Use the runbook clue to reach operator and identify the privileged command available to that account.",
+      "question": "Which command is allowed with NOPASSWD sudo for operator?",
+      "expected_answer": "/usr/local/bin/maint-check",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        { "hint_number": 1, "cost": 6, "text": "Request /runbook with the recovered token." },
+        { "hint_number": 2, "cost": 8, "text": "Inspect sudo -l after reaching operator." }
+      ]
+    },
+    {
+      "step_number": 5,
+      "title": "Capture the final flag",
+      "description": "Abuse the maintenance command's unsafe PATH usage to execute as root.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{operations_breach_chain_root}",
+      "validation_type": "exact_match",
+      "points": 25,
+      "hints": [
+        { "hint_number": 1, "cost": 8, "text": "The script invokes tar without an absolute path." },
+        { "hint_number": 2, "cost": 10, "text": "Use sudo env PATH=... /usr/local/bin/maint-check after gaining operator." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "lab_id": "1f4519da-f8c2-43b8-b2b8-4e0e46223c92",
+  "name": "Borealis Control Plane",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "services": [],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "advanced",
+  "category": "web_security",
+  "estimated_duration": "60-90min",
+  "story": "Borealis exposes a single public control-plane port, but the application behind it is larger than it first appears. Support tooling leaks account data, authorization decisions trust caller-controlled values, a project query is assembled unsafely, and a renderer can reach a local-only admin service. Your mission is to chain those flaws until the internal import path reveals the final flag.",
+  "objectives": "Chain account discovery, auth bypass, SQL injection, SSRF, and an internal import primitive behind a single public web endpoint.",
+  "prerequisites": null,
+  "template_path": "lab-web-borealis-control-plane:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Find the support leak",
+      "description": "Probe password reset behavior and identify the field that leaks account role data.",
+      "question": "Which JSON field exposes the reset target account details?",
+      "expected_answer": "debug_user",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": [
+        { "hint_number": 1, "cost": 3, "text": "Send a reset request for a known account." },
+        { "hint_number": 2, "cost": 5, "text": "Inspect the JSON returned by /api/reset." }
+      ]
+    },
+    {
+      "step_number": 2,
+      "title": "Bypass login",
+      "description": "Exploit the raw SQL login query and become admin.",
+      "question": "Which role must /api/login return after the bypass?",
+      "expected_answer": "admin",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": [
+        { "hint_number": 1, "cost": 4, "text": "The email field is interpolated into SQL." },
+        { "hint_number": 2, "cost": 6, "text": "A classic quote-based boolean payload works." }
+      ]
+    },
+    {
+      "step_number": 3,
+      "title": "Identify the project injection",
+      "description": "Find the query parameter that is inserted directly into the projects SQL query.",
+      "question": "Which parameter on /api/projects is injectable?",
+      "expected_answer": "owner",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": [
+        { "hint_number": 1, "cost": 4, "text": "Try changing the project owner filter." },
+        { "hint_number": 2, "cost": 6, "text": "The endpoint builds WHERE owner = '<input>'." }
+      ]
+    },
+    {
+      "step_number": 4,
+      "title": "Extract the vault token",
+      "description": "Use UNION-based SQL injection to read the secret needed by the internal service.",
+      "question": "What vault token is stored in the secrets table?",
+      "expected_answer": "NORTHSTAR-9000",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        { "hint_number": 1, "cost": 7, "text": "The projects query returns three columns." },
+        { "hint_number": 2, "cost": 9, "text": "The secrets table contains key and value columns." }
+      ]
+    },
+    {
+      "step_number": 5,
+      "title": "Reach the local-only admin service",
+      "description": "Abuse the renderer SSRF path to query the internal vault service.",
+      "question": "Which internal endpoint reveals the import path when given the token?",
+      "expected_answer": "/admin/vault",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": [
+        { "hint_number": 1, "cost": 6, "text": "The renderer accepts loopback URLs on port 3001." },
+        { "hint_number": 2, "cost": 8, "text": "Use the recovered token as a query parameter." }
+      ]
+    },
+    {
+      "step_number": 6,
+      "title": "Capture the final flag",
+      "description": "Use the internal import clue while authenticated as admin and recover the flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "ALTAIR{borealis_control_plane_root}",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": [
+        { "hint_number": 1, "cost": 7, "text": "The vault response points to /api/import?cmd=read-flag." },
+        { "hint_number": 2, "cost": 9, "text": "Keep the admin session cookie from the login bypass." }
+      ]
+    }
+  ]
+}
