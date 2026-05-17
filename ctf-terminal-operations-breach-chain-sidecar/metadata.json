@@ -1,0 +1,78 @@
+{
+  "lab_id": "08ac35ef-693e-4c78-9d54-8229cae0f34d",
+  "name": "Operations Breach Chain - Sidecar",
+  "lab_family": "guided",
+  "lab_delivery": "terminal",
+  "runtime": {
+    "app_port": null,
+    "primary_container": "lab-container",
+    "services": [
+      {
+        "name": "runbook",
+        "image": "lab-terminal-operations-runbook:v1",
+        "ports": [8081]
+      }
+    ],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_terminal_guided",
+  "difficulty": "advanced",
+  "category": "privilege_escalation",
+  "estimated_duration": "60-90min",
+  "story": "A shared operations host now delegates its internal runbook service to a companion container in the same Pod. The learner still pivots from student to backup through cron wildcard injection, but the next clue comes from a localhost-only sidecar before the final operator-to-root escalation.",
+  "objectives": "Demonstrate a mono-Pod sidecar topology by chaining cron wildcard injection, a localhost-only runbook service, and sudo PATH hijacking.",
+  "prerequisites": null,
+  "template_path": "lab-terminal-operations-breach-chain-sidecar:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Map the archive job",
+      "description": "Inspect cron and identify the backup-owned archive script.",
+      "question": "Which script runs every minute as backup?",
+      "expected_answer": "/opt/ops/archive-uploads.sh",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    },
+    {
+      "step_number": 2,
+      "title": "Pivot to backup",
+      "description": "Exploit tar wildcard injection and gain the backup context.",
+      "question": "Which user context do you gain after the first pivot?",
+      "expected_answer": "backup",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    },
+    {
+      "step_number": 3,
+      "title": "Reach the sidecar",
+      "description": "Use the recovered token against the localhost-only runbook service.",
+      "question": "Which localhost port serves the runbook sidecar?",
+      "expected_answer": "8081",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    },
+    {
+      "step_number": 4,
+      "title": "Identify the operator path",
+      "description": "Read the runbook response and identify the privileged operator command.",
+      "question": "Which command is allowed with sudo for operator?",
+      "expected_answer": "/usr/local/bin/maint-check",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    },
+    {
+      "step_number": 5,
+      "title": "Capture the flag",
+      "description": "Hijack PATH during the privileged maintenance command and capture the root flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "FLAG{operations_breach_chain_sidecar_root}",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    }
+  ]
+}

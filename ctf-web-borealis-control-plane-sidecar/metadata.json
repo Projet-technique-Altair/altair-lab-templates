@@ -1,0 +1,88 @@
+{
+  "lab_id": "8802e8cd-5516-4205-8f73-6b62d815a6df",
+  "name": "Borealis Control Plane - Sidecar",
+  "lab_family": "guided",
+  "lab_delivery": "web",
+  "runtime": {
+    "app_port": 3000,
+    "primary_container": "lab-container",
+    "services": [
+      {
+        "name": "admin-api",
+        "image": "lab-web-borealis-admin-api:v1",
+        "ports": [3001]
+      }
+    ],
+    "entrypoints": []
+  },
+  "lab_type": "ctf_web_guided",
+  "difficulty": "advanced",
+  "category": "web_security",
+  "estimated_duration": "60-90min",
+  "story": "Borealis still exposes one public HTTP port, but its sensitive admin vault now lives in a companion container inside the same Pod. The learner must chain public web flaws into an SSRF request that reaches the local-only sidecar before using the discovered import path to recover the flag.",
+  "objectives": "Demonstrate a web sidecar topology with one public port and a localhost-only admin API reached through SSRF.",
+  "prerequisites": null,
+  "template_path": "lab-web-borealis-control-plane-sidecar:v1",
+  "steps": [
+    {
+      "step_number": 1,
+      "title": "Find the support leak",
+      "description": "Probe password reset behavior and identify the leaked account object.",
+      "question": "Which JSON field exposes account details?",
+      "expected_answer": "debug_user",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": []
+    },
+    {
+      "step_number": 2,
+      "title": "Bypass login",
+      "description": "Exploit SQL injection and become admin.",
+      "question": "Which role must the login endpoint return?",
+      "expected_answer": "admin",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": []
+    },
+    {
+      "step_number": 3,
+      "title": "Find the injectable parameter",
+      "description": "Identify the project filter used directly in SQL.",
+      "question": "Which parameter on /api/projects is injectable?",
+      "expected_answer": "owner",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": []
+    },
+    {
+      "step_number": 4,
+      "title": "Extract the vault token",
+      "description": "Read the secret needed by the internal API.",
+      "question": "What vault token is stored in the secrets table?",
+      "expected_answer": "NORTHSTAR-9000",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    },
+    {
+      "step_number": 5,
+      "title": "Reach the admin sidecar",
+      "description": "Use SSRF to query the local-only admin API.",
+      "question": "Which localhost port serves the admin sidecar?",
+      "expected_answer": "3001",
+      "validation_type": "exact_match",
+      "points": 15,
+      "hints": []
+    },
+    {
+      "step_number": 6,
+      "title": "Capture the flag",
+      "description": "Use the internal import path and recover the final flag.",
+      "question": "What is the captured flag?",
+      "expected_answer": "ALTAIR{borealis_sidecar_root}",
+      "validation_type": "exact_match",
+      "points": 20,
+      "hints": []
+    }
+  ]
+}

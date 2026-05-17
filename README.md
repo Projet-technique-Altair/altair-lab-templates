@@ -17,12 +17,14 @@ These images are meant to run in isolated, ephemeral environments through the La
 | `ctf-terminal-cron-wildcard-hard/` | Cron Wildcard PrivEsc | `ctf_terminal_guided` | advanced | `privilege_escalation` | 45-60min | 3 |
 | `ctf-terminal-cron-symlink-race-insane/` | Cron Chain + Symlink Race | `ctf_terminal_guided` | advanced | `privilege_escalation` | 60-90min | 4 |
 | `ctf-terminal-operations-breach-chain/` | Operations Breach Chain | `ctf_terminal_guided` | advanced | `privilege_escalation` | 60-90min | 5 |
+| `ctf-terminal-operations-breach-chain-sidecar/` | Operations Breach Chain - Sidecar | `ctf_terminal_guided` | advanced | `privilege_escalation` | 60-90min | 5 |
 | `ctf-web/` | Orbital Console Injection | `ctf_web_guided` | medium | `web_security` | 30-45min | 3 |
 | `ctf-web-random-flag-smoke/` | Random Web Flag Smoke Test | `ctf_web_guided` | easy | `web_security` | 2-5min | 1 |
 | `ctf-web-sqli-login-easy/` | SQLi Login Bypass | `ctf_web_guided` | easy | `web_security` | 20-30min | 3 |
 | `ctf-web-sqli-union-intermediate/` | SQLi UNION Exfiltration | `ctf_web_guided` | medium | `web_security` | 30-45min | 3 |
 | `ctf-web-sqli-filter-bypass-advanced/` | SQLi Filter Bypass | `ctf_web_guided` | advanced | `web_security` | 40-60min | 3 |
 | `ctf-web-borealis-control-plane/` | Borealis Control Plane | `ctf_web_guided` | advanced | `web_security` | 60-90min | 6 |
+| `ctf-web-borealis-control-plane-sidecar/` | Borealis Control Plane - Sidecar | `ctf_web_guided` | advanced | `web_security` | 60-90min | 6 |
 | `nmap-course/` | Nmap Basics - First Recon | `ctf_terminal_guided` | easy | `network_recon` | 15-25min | 7 |
 
 ## Repository Layout
@@ -46,6 +48,7 @@ template-name/
 ```
 
 Some templates include extra helper files such as vulnerable scripts, cron helpers, C sources, or a `SOLVE.md` walkthrough for internal validation.
+Level-2 templates may also include `sidecars/` directories with Dockerfiles for companion containers declared through `runtime.services`.
 
 ## Metadata Contract
 
@@ -83,6 +86,8 @@ Platform mapping:
 - `steps[]` describes learner progression and validation.
 - `hints[]` describes optional learner assistance and scoring cost.
 - `template_path` identifies the container image used by the lab runtime.
+- `runtime.primary_container` identifies the learner-facing container when a lab uses sidecars.
+- `runtime.services[]` declares same-Pod sidecars that share `localhost` with the primary container.
 
 ## Template Families
 
