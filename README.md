@@ -164,3 +164,9 @@ Security fixes applied to the platform services, such as non-root production con
 6. Keep secrets out of the repository; flags are challenge artifacts, not service credentials.
 
 Before merging a new template, verify that `metadata.json` parses cleanly and that the `template_path` matches the image tag expected by the lab runtime.
+
+## Code-aligned notes - 2026-05-21
+
+Lab templates are intentionally vulnerable training assets and must run only in isolated ephemeral environments. Each template directory contains a Dockerfile and metadata consumed by the lab catalog/build/runtime pipeline.
+
+Current coverage includes terminal privilege-escalation scenarios, web SQL injection scenarios, Borealis control-plane labs, operations breach chains and an nmap course. Sidecar variants are present for multi-container style labs. Template READMEs remain challenge-specific and should not expose final flags in learner-facing copy.
